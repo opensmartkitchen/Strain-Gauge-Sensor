@@ -20,6 +20,7 @@ int i = 0;
 
 float delta = 0.25;
 float calculatedDelta;
+long count = 0;
 
 
 HX711 scale;
@@ -38,37 +39,34 @@ void setup() {
   Serial.println();
 }
 
-void loop() {
+void loop() {  //sampling block
 
   weightReading = scale.get_units();
   weight[ringIndex] = weightReading;
   sum = sum + weightReading;
   ringIndex++;
 
-  if (ringIndex > endIndex) {
+  if (ringIndex > endIndex) {         //end ring block
     ringIndex = startIndex;
     avgArray1 = sum / arraySize;
     calculatedDelta = avgArray2 - avgArray1;
 
-    if (abs(calculatedDelta) >= delta) {
+    if (abs(calculatedDelta) >= delta) {        //communication block with delta
       for (int i = 0; i < arraySize; i++) {
         Serial.print(weight[i], 3);
         Serial.print("\t");
       }
-      i = 0;
-      sum = 0;
       Serial.print(avgArray1, 3);
       Serial.print("\t \t");
       Serial.print(calculatedDelta);
+      Serial.print("\t");
+      Serial.print(count);
       Serial.println();
-      delay(200);
     }
 
     avgArray2 = avgArray1;
+    sum = 0;
+    count++;
+
   }
 }
-
-//  Serial.print("Reading: ");
-//  Serial.print(weightReading, 3); //scale.get_units() returns a float
-//  Serial.print(" lbs"); //You can change this to kg but you'll need to refactor the calibration_factor
-//  Serial.println();
