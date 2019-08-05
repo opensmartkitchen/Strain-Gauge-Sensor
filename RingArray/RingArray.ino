@@ -1,20 +1,20 @@
 #include "HX711.h"
 
-#define calibration_factor 97420 //This value is obtained using the SparkFun_HX711_Calibration sketch
+#define calibration_factor 96670.00 //This value is obtained using the SparkFun_HX711_Calibration sketch
 
 #define DOUT  3
 #define CLK  2
 
 
 const int arraySize = 10;
-long weight[arraySize];
-long weightReading;
+float weight[arraySize];
+float weightReading;
 int ringIndex = 0;
 int startIndex = 0;
 int endIndex = arraySize - 1;
 
-long sum = 0;
-long avgArray1 = 0;
+float sum = 0;
+float avgArray1 = 0;
 int i = 0;
 
 
@@ -46,12 +46,12 @@ void loop() {
     avgArray1 = sum / arraySize;
 
     for (int i = 0; i < arraySize; i++) {
-      Serial.print(weight[i], 8);
+      Serial.print(weight[i], 3);
       Serial.print("\t");
     }
     i = 0;
     sum = 0;
-    Serial.print(avgArray1, 8);
+    Serial.print(avgArray1, 3);
     Serial.println();
   }
 }
